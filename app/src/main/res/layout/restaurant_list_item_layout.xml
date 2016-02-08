@@ -1,55 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/txtRestaurantName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:textSize="18sp"
-        android:text="Dal Fufo"
-        android:layout_toLeftOf="@+id/distanceGroupLayout"
-        android:layout_toStartOf="@+id/distanceGroupLayout"
-        android:textColor="@color/textColorPrimary"/>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    card_view:cardCornerRadius="4dp"
+    android:elevation="4dp"
+    android:layout_margin="4dp">
 
     <RelativeLayout
-        android:id="@id/distanceGroupLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin">
+
         <TextView
-            android:id="@+id/txtDistanceTo"
-            android:layout_width="wrap_content"
+            android:id="@+id/txtRestaurantName"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:textSize="16sp"
-            android:text="Distance to place:"
             android:layout_alignParentTop="true"
-            android:textColor="@color/textColorSecondary"/>
-        <TextView
+            android:layout_centerVertical="true"
+            android:layout_marginTop="10dp"
+            android:text="Dal Fufo"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="18sp" />
+
+        <RelativeLayout
+            android:id="@+id/distanceGroupLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:textSize="16sp"
-            android:text="1.56km"
-            android:layout_below="@id/txtDistanceTo"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/textColorSecondary"/>
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/txtRestaurantName">
+
+            <TextView
+                android:id="@+id/txtDistanceTo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
+                android:text="Distance to place:"
+                android:textColor="@color/textColorSecondary"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/txtDistanceToValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtDistanceTo"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="1.56km"
+                android:textColor="@color/textColorSecondary"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/distanceGroupLayout"
+            android:background="@color/colorAccent"
+            android:layout_marginTop="5dp"/>
+
     </RelativeLayout>
 
-</RelativeLayout>
+</android.support.v7.widget.CardView>

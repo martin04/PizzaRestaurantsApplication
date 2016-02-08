@@ -10,14 +10,14 @@ public class Restaurant implements Parcelable {
 
     private Long id;
     private String name;
-    private float latitude;
-    private float longitude;
-    private float distance;
+    private double latitude;
+    private double longitude;
+    private double distance;
 
     public Restaurant() {
     }
 
-    public Restaurant(String name, float latitude, float longitude, float distance) {
+    public Restaurant(String name, double latitude, double longitude, double distance) {
         super();
         this.name = name;
         this.latitude = latitude;
@@ -28,9 +28,9 @@ public class Restaurant implements Parcelable {
     public Restaurant(Parcel in){
         super();
         this.name = in.readString();
-        this.latitude = in.readFloat();
-        this.longitude = in.readFloat();
-        this.distance = in.readFloat();
+        this.latitude = in.readDouble();
+        this.longitude = in.readDouble();
+        this.distance = in.readDouble();
     }
 
     public String getName() {
@@ -41,27 +41,27 @@ public class Restaurant implements Parcelable {
         this.name = name;
     }
 
-    public float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(float latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public float getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(float longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    public float getDistance() {
+    public double getDistance() {
         return distance;
     }
 
-    public void setDistance(float distance) {
+    public void setDistance(double distance) {
         this.distance = distance;
     }
 
@@ -73,9 +73,9 @@ public class Restaurant implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(getName());
-        dest.writeFloat(getLatitude());
-        dest.writeFloat(getLongitude());
-        dest.writeFloat(getDistance());
+        dest.writeDouble(getLatitude());
+        dest.writeDouble(getLongitude());
+        dest.writeDouble(getDistance());
     }
 
     public static final Parcelable.Creator<Restaurant> CREATOR = new Parcelable.Creator<Restaurant>() {

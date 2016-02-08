@@ -4,9 +4,17 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.martin.pizzarestaurantsapplication.adapters.RestaurantRecViewAdapter;
+import com.martin.pizzarestaurantsapplication.models.Restaurant;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -66,8 +74,42 @@ public class RestaurantListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_restaurant_list, container, false);
+        View v = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
+
+        RecyclerView lstRestaurants = (RecyclerView)v.findViewById(R.id.lstRestaurants);
+        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2,1);//vertical = 1, horizontal = 0;
+
+        lstRestaurants.setHasFixedSize(true);
+        lstRestaurants.setLayoutManager(manager);
+
+        Restaurant r1 = new Restaurant("Dal Fufo Galija", 41.991632, 21.4227177, 1.56);
+        Restaurant r2 = new Restaurant("Mexican Restaurant \"Amigos\"", 41.9929128, 21.428114, 1.56);
+        Restaurant r3 = new Restaurant("Bella Vista - Lounge bar & Restaurant", 41.9951693, 21.4319664, 1.56);
+        Restaurant r4 = new Restaurant("Pelister", 41.9951693, 21.4319664, 1.56);
+        Restaurant r5 = new Restaurant("Squeeze Me", 41.9970685, 21.4282868, 1.56);
+        Restaurant r6 = new Restaurant("Sushi Co", 41.9995376, 21.4235793, 1.56);
+        Restaurant r7 = new Restaurant("Idadija Restaurant", 42.0013537, 21.4203743, 1.56);
+        Restaurant r8 = new Restaurant("Skopski Merak", 42.0011807, 21.4204159, 1.56);
+        Restaurant r9 = new Restaurant("Chardak Restaurant - Center", 42.0017447, 21.4220024, 1.56);
+        Restaurant r10   = new Restaurant("Fitness House", 42.0008492, 21.4147021, 1.56);
+
+        List<Restaurant> lst = new ArrayList<>();
+        lst.add(r1);
+        lst.add(r2);
+        lst.add(r3);
+        lst.add(r4);
+        lst.add(r5);
+        lst.add(r6);
+        lst.add(r7);
+        lst.add(r8);
+        lst.add(r9);
+        lst.add(r10);
+
+        RestaurantRecViewAdapter adapter = new RestaurantRecViewAdapter(lst);
+        lstRestaurants.setAdapter(adapter);
+
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
