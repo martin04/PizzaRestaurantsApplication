@@ -8,6 +8,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- Activities -->
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -15,6 +18,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <!-- Services -->
+        
+        
+        <!-- Providers -->
+
+        <provider
+            android:authorities="com.martin.pizzarestaurantsapplication.contentprovider"
+            android:name=".contentprovider.RestaurantContentProvider"
+            android:exported="false" />
     </application>
 
 </manifest>
