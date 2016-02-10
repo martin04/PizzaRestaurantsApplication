@@ -1,8 +1,10 @@
 <resources>
-    <string name="app_name">PizzaRestaurantsApplication</string>
+    <string name="app_name">Restaurants nearby</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="google_map_v2_api_key">AIzaSyAlh6Sp6QrjEkyng8KhuP-Q9VHgvX-bIcU</string>
+
+    <string name="action_settings">Settings</string>
 </resources>
