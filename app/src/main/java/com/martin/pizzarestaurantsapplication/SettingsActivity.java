@@ -27,6 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
         actionbar = getSupportActionBar();
         if(actionbar != null){
             actionbar.setDisplayHomeAsUpEnabled(true);
+            actionbar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
             actionbar.setTitle(Html.fromHtml("<font color='#ffffff'>" + getString(R.string.action_settings) + "</font>"));
         }
     }
