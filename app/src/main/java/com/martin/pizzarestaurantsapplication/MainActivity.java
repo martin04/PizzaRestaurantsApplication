@@ -20,6 +20,8 @@ import com.martin.pizzarestaurantsapplication.adapters.CustomFragmentAdapter;
 
 public class MainActivity extends AppCompatActivity implements RestaurantListFragment.OnFragmentInteractionListener, RestaurantMapFragment.OnFragmentMapInteractionListener {
 
+    private static final int REQUEST_CODE = 2;
+
     private Toolbar toolbar;
     private ViewPager pager;
     private TabLayout tabs;
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements RestaurantListFra
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
-        if(actionBar != null){
+        if (actionBar != null) {
             actionBar.setTitle(Html.fromHtml("<font color='#ffffff'>" + getString(R.string.app_name) + "</font>"));
         }
 
@@ -77,12 +79,21 @@ public class MainActivity extends AppCompatActivity implements RestaurantListFra
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
+                startActivityForResult(new Intent(this, SettingsActivity.class), REQUEST_CODE);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+
+            Toast.makeText(this, "Datasync changed to:" + data.getBooleanExtra(SettingsActivity.KEY_DATA_SYNC, true), Toast.LENGTH_LONG).show();
+            
         }
     }
 
