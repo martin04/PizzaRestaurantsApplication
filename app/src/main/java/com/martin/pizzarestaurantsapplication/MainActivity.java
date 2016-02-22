@@ -14,18 +14,21 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.martin.pizzarestaurantsapplication.adapters.CustomFragmentAdapter;
 
-public class MainActivity extends AppCompatActivity implements RestaurantListFragment.OnFragmentInteractionListener, RestaurantMapFragment.OnFragmentMapInteractionListener {
+public class MainActivity extends AppCompatActivity implements RestaurantListFragment.OnFragmentInteractionListener, RestaurantMapFragment.OnFragmentMapInteractionListener, View.OnClickListener {
 
     private static final int REQUEST_CODE = 2;
 
     private Toolbar toolbar;
-    private ViewPager pager;
-    private TabLayout tabs;
+    private ImageView imgMap;
+    private ImageView imgList;
     private ActionBar actionBar;
+    private Toolbar footer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,36 +42,12 @@ public class MainActivity extends AppCompatActivity implements RestaurantListFra
             actionBar.setTitle(Html.fromHtml("<font color='#ffffff'>" + getString(R.string.app_name) + "</font>"));
         }
 
-        pager = (ViewPager) findViewById(R.id.viewpager);
-        setUpViewPager(pager);
+        footer = (Toolbar) findViewById(R.id.footerView);
+        imgMap = (ImageView) footer.findViewById(R.id.btnMap);
+        imgList = (ImageView) footer.findViewById(R.id.btnList);
+        imgMap.setOnClickListener(this);
+        imgList.setOnClickListener(this);
 
-        tabs = (TabLayout) findViewById(R.id.tabs);
-        tabs.setupWithViewPager(pager);
-        tabs.setTabTextColors(ContextCompat.getColor(this, R.color.colorPrimaryLight), ContextCompat.getColor(this, R.color.colorAccent));
-        tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                pager.setCurrentItem(tab.getPosition());
-                tabs.setTabTextColors(ContextCompat.getColor(MainActivity.this, R.color.colorPrimaryLight), ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-    }
-
-    private void setUpViewPager(ViewPager viewPager) {
-        CustomFragmentAdapter adapter = new CustomFragmentAdapter(getSupportFragmentManager());
-        adapter.addFragment(new RestaurantMapFragment(), "Map");
-        adapter.addFragment(new RestaurantListFragment(), "List");
-        viewPager.setAdapter(adapter);
     }
 
     @Override
@@ -105,5 +84,19 @@ public class MainActivity extends AppCompatActivity implements RestaurantListFra
     @Override
     public void onFragmentMapInteraction(Uri uri) {
         Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+           case R.id.btnMap:
+                RestaurantMapFragment mapFragment = new RestaurantMapFragment();
+               getSupportFragmentManager().beginTransaction().replace(R.id.container, mapFragment, RestaurantMapFragment.TAG).commit();
+            break;
+           case R.id.btnList:
+               RestaurantListFragment listFragment = new RestaurantListFragment();
+               getSupportFragmentManager().beginTransaction().replace(R.id.container, listFragment, RestaurantListFragment.TAG).commit();
+            break;
+        }
     }
 }
