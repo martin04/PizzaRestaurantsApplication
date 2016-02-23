@@ -1,6 +1,9 @@
 package com.martin.pizzarestaurantsapplication;
 
 import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -42,6 +47,7 @@ public class RestaurantMapFragment extends Fragment implements OnMapReadyCallbac
 
     private GoogleMap map;
     private List<Restaurant> lst;
+    private Location userLocation;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -129,6 +135,53 @@ public class RestaurantMapFragment extends Fragment implements OnMapReadyCallbac
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+
+        setLocation();
+    }
+
+    /**
+     * Function that will set my current location
+     */
+    private void setLocation(){
+
+        String locationService = Context.LOCATION_SERVICE;
+        LocationManager locationManager;
+        locationManager = (LocationManager)getActivity().getSystemService(locationService);
+        // List<String> enabledProviders = locationManager.getProviders(true);
+        String provider = LocationManager.NETWORK_PROVIDER;
+        int t = 5000; // milliseconds
+        int distance = 5; // meters
+
+        try {
+            userLocation = locationManager.getLastKnownLocation(provider);
+            LocationListener  myLocationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    userLocation = location;
+                    setMapToCoordinates();
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+            };
+            locationManager.requestLocationUpdates(provider, t, distance, myLocationListener);
+
+        }catch(SecurityException ex){
+            Toast.makeText(getActivity(), "Please enable your GPS", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
@@ -174,8 +227,17 @@ public class RestaurantMapFragment extends Fragment implements OnMapReadyCallbac
                                     new LatLng(pm.getLatitude(), pm.getLongitude()))
                             .snippet(pm.getDistance() + "m"));
                 }
+
+                
             }
         });
+    }
+
+    private void setMapToCoordinates(){
+        CameraUpdate camera = CameraUpdateFactory.newLatLng(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()));
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(14);
+        map.moveCamera(camera);
+        map.animateCamera(zoom);
     }
 
     /**

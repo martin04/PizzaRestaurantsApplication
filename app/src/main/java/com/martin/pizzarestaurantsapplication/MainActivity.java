@@ -15,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -52,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements RestaurantListFra
         RestaurantMapFragment mapFragment = new RestaurantMapFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container, mapFragment, RestaurantMapFragment.TAG).commit();
         imgMap.setImageResource(R.drawable.ic_place_orange_24dp);
+
+
     }
 
     @Override
@@ -74,8 +78,6 @@ public class MainActivity extends AppCompatActivity implements RestaurantListFra
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE) {
-
-            Toast.makeText(this, "Datasync changed to:" + data.getBooleanExtra(SettingsActivity.KEY_DATA_SYNC, true), Toast.LENGTH_LONG).show();
             
         }
     }
@@ -92,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements RestaurantListFra
 
     @Override
     public void onClick(View v) {
+        final Animation  btnAlphaAnimation = AnimationUtils.loadAnimation(this, R.anim.btn_footer_alpha);
+        v.startAnimation(btnAlphaAnimation);
         switch(v.getId()){
            case R.id.btnMap:
                imgMap.setImageResource(R.drawable.ic_place_orange_24dp);
