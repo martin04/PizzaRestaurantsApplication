@@ -5,4 +5,5 @@
 
     <!-- Footer dimens -->
     <dimen name="footer_item_padding">8dp</dimen>
+    <dimen name="footer_default_padding">6dp</dimen>
 </resources>

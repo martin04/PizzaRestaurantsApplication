@@ -9,7 +9,8 @@
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/demoRibbonLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_above="@+id/footerView">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -34,7 +35,7 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/footerView"
+        android:id="@id/footerView"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
@@ -49,7 +50,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="@dimen/footer_default_padding">
 
             <ImageView
                 android:id="@+id/btnMap"
@@ -58,8 +60,7 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_place_white_24dp"
                 android:layout_toLeftOf="@+id/divider"
-                android:layout_toStartOf="@+id/divider"
-                android:padding="@dimen/footer_item_padding"/>
+                android:layout_toStartOf="@+id/divider" />
 
             <View
                 android:id="@id/divider"
@@ -75,9 +76,7 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_view_list_white_24dp"
                 android:layout_toRightOf="@+id/divider"
-                android:layout_toEndOf="@+id/divider"
-                android:padding="@dimen/footer_item_padding"
-                />
+                android:layout_toEndOf="@+id/divider" />
 
 
         </RelativeLayout>

@@ -20,7 +20,8 @@ import android.widget.Toast;
 
 import com.martin.pizzarestaurantsapplication.adapters.CustomFragmentAdapter;
 
-public class MainActivity extends AppCompatActivity implements RestaurantListFragment.OnFragmentInteractionListener, RestaurantMapFragment.OnFragmentMapInteractionListener, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements RestaurantListFragment.OnFragmentInteractionListener,
+        RestaurantMapFragment.OnFragmentMapInteractionListener, View.OnClickListener {
 
     private static final int REQUEST_CODE = 2;
 
@@ -48,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements RestaurantListFra
         imgMap.setOnClickListener(this);
         imgList.setOnClickListener(this);
 
+        RestaurantMapFragment mapFragment = new RestaurantMapFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, mapFragment, RestaurantMapFragment.TAG).commit();
+        imgMap.setImageResource(R.drawable.ic_place_orange_24dp);
     }
 
     @Override
@@ -90,10 +94,14 @@ public class MainActivity extends AppCompatActivity implements RestaurantListFra
     public void onClick(View v) {
         switch(v.getId()){
            case R.id.btnMap:
+               imgMap.setImageResource(R.drawable.ic_place_orange_24dp);
+               imgList.setImageResource(R.drawable.ic_view_list_white_24dp);
                 RestaurantMapFragment mapFragment = new RestaurantMapFragment();
                getSupportFragmentManager().beginTransaction().replace(R.id.container, mapFragment, RestaurantMapFragment.TAG).commit();
             break;
            case R.id.btnList:
+               imgMap.setImageResource(R.drawable.ic_place_white_24dp);
+               imgList.setImageResource(R.drawable.ic_view_list_orange_24dp);
                RestaurantListFragment listFragment = new RestaurantListFragment();
                getSupportFragmentManager().beginTransaction().replace(R.id.container, listFragment, RestaurantListFragment.TAG).commit();
             break;
