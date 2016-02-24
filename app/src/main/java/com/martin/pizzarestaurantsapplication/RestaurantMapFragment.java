@@ -1,6 +1,7 @@
 package com.martin.pizzarestaurantsapplication;
 
 import android.content.Context;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -148,9 +149,11 @@ public class RestaurantMapFragment extends Fragment implements OnMapReadyCallbac
         LocationManager locationManager;
         locationManager = (LocationManager)getActivity().getSystemService(locationService);
         // List<String> enabledProviders = locationManager.getProviders(true);
-        String provider = LocationManager.NETWORK_PROVIDER;
-        int t = 5000; // milliseconds
-        int distance = 5; // meters
+
+        Criteria criteria = new Criteria();
+        String provider = LocationManager.NETWORK_PROVIDER; //locationManager.getBestProvider(criteria, true);
+        int t = 0; // milliseconds
+        int distance = 0; // meters
 
         try {
             userLocation = locationManager.getLastKnownLocation(provider);
@@ -228,7 +231,7 @@ public class RestaurantMapFragment extends Fragment implements OnMapReadyCallbac
                             .snippet(pm.getDistance() + "m"));
                 }
 
-                
+
             }
         });
     }

@@ -1,7 +1,10 @@
 package com.martin.pizzarestaurantsapplication;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +12,16 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
 import com.martin.pizzarestaurantsapplication.adapters.RestaurantRecViewAdapter;
 import com.martin.pizzarestaurantsapplication.models.Restaurant;
 
@@ -25,7 +37,7 @@ import java.util.List;
  * Use the {@link RestaurantListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RestaurantListFragment extends Fragment {
+public class RestaurantListFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener, OnFetchPlacesListener{
 
     public static final String TAG = "RestaurantListFragment";
 
@@ -39,6 +51,8 @@ public class RestaurantListFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private GoogleApiClient mGoogleApiClient;
+    private RecyclerView lstRestaurants;
 
     public RestaurantListFragment() {
         // Required empty public constructor
@@ -69,6 +83,12 @@ public class RestaurantListFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(getActivity(), this)
+                .build();
     }
 
     @Override
@@ -76,13 +96,13 @@ public class RestaurantListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
 
-        RecyclerView lstRestaurants = (RecyclerView)v.findViewById(R.id.lstRestaurants);
+        lstRestaurants = (RecyclerView)v.findViewById(R.id.lstRestaurants);
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2,1);//vertical = 1, horizontal = 0;
 
         lstRestaurants.setHasFixedSize(true);
         lstRestaurants.setLayoutManager(manager);
 
-        Restaurant r1 = new Restaurant("Dal Fufo Galija", 41.991632, 21.4227177, 1.56);
+        /*Restaurant r1 = new Restaurant("Dal Fufo Galija", 41.991632, 21.4227177, 1.56);
         Restaurant r2 = new Restaurant("Mexican Restaurant \"Amigos\"", 41.9929128, 21.428114, 1.56);
         Restaurant r3 = new Restaurant("Bella Vista - Lounge bar & Restaurant", 41.9951693, 21.4319664, 1.56);
         Restaurant r4 = new Restaurant("Pelister", 41.9951693, 21.4319664, 1.56);
@@ -91,23 +111,9 @@ public class RestaurantListFragment extends Fragment {
         Restaurant r7 = new Restaurant("Idadija Restaurant", 42.0013537, 21.4203743, 1.56);
         Restaurant r8 = new Restaurant("Skopski Merak", 42.0011807, 21.4204159, 1.56);
         Restaurant r9 = new Restaurant("Chardak Restaurant - Center", 42.0017447, 21.4220024, 1.56);
-        Restaurant r10   = new Restaurant("Fitness House", 42.0008492, 21.4147021, 1.56);
+        Restaurant r10   = new Restaurant("Fitness House", 42.0008492, 21.4147021, 1.56);*/
 
-        List<Restaurant> lst = new ArrayList<>();
-        lst.add(r1);
-        lst.add(r2);
-        lst.add(r3);
-        lst.add(r4);
-        lst.add(r5);
-        lst.add(r6);
-        lst.add(r7);
-        lst.add(r8);
-        lst.add(r9);
-        lst.add(r10);
-
-        RestaurantRecViewAdapter adapter = new RestaurantRecViewAdapter(lst);
-        lstRestaurants.setAdapter(adapter);
-
+        new GetLikelyHoodAsync(this).execute(mGoogleApiClient);
 
         return v;
     }
@@ -136,6 +142,12 @@ public class RestaurantListFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onPlacesFetched(List<Restaurant> lstPlaces) {
+        RestaurantRecViewAdapter adapter = new RestaurantRecViewAdapter(lstPlaces);
+        lstRestaurants.setAdapter(adapter);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -149,5 +161,68 @@ public class RestaurantListFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Toast.makeText(getActivity(), "Connection cannot be established with Google Services", Toast.LENGTH_LONG).show();
+    }
+
+
+    class GetLikelyHoodAsync extends AsyncTask<GoogleApiClient, Void, Void> implements ResultCallback<PlaceLikelihoodBuffer>{
+
+        private OnFetchPlacesListener listener;
+        private List<Restaurant> tmpPlaces;
+
+        public GetLikelyHoodAsync(OnFetchPlacesListener listener){
+            this.listener = listener;
+            tmpPlaces = new ArrayList<>();
+        }
+
+        @Override
+        protected Void doInBackground(GoogleApiClient... params) {
+            try {
+                PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace(mGoogleApiClient, null);
+                result.setResultCallback(this);
+
+            }catch (SecurityException ex){
+                ex.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+        }
+
+
+        @Override
+        public void onResult(PlaceLikelihoodBuffer placeLikelihoods) {
+            for (PlaceLikelihood placeLikelihood : placeLikelihoods) {
+                Restaurant tmpRest = new Restaurant();
+                tmpRest.setName(placeLikelihood.getPlace().getName().toString());
+
+                LatLng tmpLatLng = placeLikelihood.getPlace().getLatLng();
+                tmpRest.setLatitude(tmpLatLng.latitude);
+                tmpRest.setLongitude(tmpLatLng.longitude);
+
+                Location myLocation = new Location("Martin's location");
+                myLocation.setLatitude(42.00095);
+                myLocation.setLongitude(21.4147421);
+                Location placeLocation = new Location("Place location");
+                placeLocation.setLatitude(tmpLatLng.latitude);
+                placeLocation.setLongitude(tmpLatLng.longitude);
+
+                tmpRest.setDistance(myLocation.distanceTo(placeLocation));
+
+                tmpPlaces.add(tmpRest);
+            }
+            placeLikelihoods.release();
+
+            if(tmpPlaces != null && tmpPlaces.size() > 0){
+                listener.onPlacesFetched(tmpPlaces);
+            }
+        }
     }
 }

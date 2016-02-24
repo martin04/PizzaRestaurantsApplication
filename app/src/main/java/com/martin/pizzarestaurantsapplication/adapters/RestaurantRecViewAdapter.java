@@ -34,7 +34,7 @@ public class RestaurantRecViewAdapter extends RecyclerView.Adapter<RestaurantRec
     public void onBindViewHolder(RestaurantViewHolder holder, int position) {
         Restaurant rest = lstRestaurants.get(position);
         holder.txtRestaurantName.setText(rest.getName());
-        holder.txtDistanceToValue.setText(String.format("%.2f km",rest.getDistance()));
+        holder.txtDistanceToValue.setText(String.format("%.2f m",rest.getDistance()));
     }
 
     @Override
