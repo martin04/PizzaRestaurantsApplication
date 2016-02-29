@@ -2,10 +2,12 @@ package com.martin.pizzarestaurantsapplication;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -53,6 +55,8 @@ public class RestaurantListFragment extends Fragment implements GoogleApiClient.
     private OnFragmentInteractionListener mListener;
     private GoogleApiClient mGoogleApiClient;
     private RecyclerView lstRestaurants;
+    private SharedPreferences sharedPreferencesCompat;
+    private boolean dataSync; //FALSE-no data syn , TRUE - data sync
 
     public RestaurantListFragment() {
         // Required empty public constructor
@@ -84,11 +88,16 @@ public class RestaurantListFragment extends Fragment implements GoogleApiClient.
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(getActivity(), this)
-                .build();
+        readSettings();
+        if(dataSync) {
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                    .addApi(Places.GEO_DATA_API)
+                    .addApi(Places.PLACE_DETECTION_API)
+                    .enableAutoManage(getActivity(), this)
+                    .build();
+        }else{
+            Toast.makeText(getActivity(), "Data sync is disabled. Please turn on to refresh list!", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -102,18 +111,9 @@ public class RestaurantListFragment extends Fragment implements GoogleApiClient.
         lstRestaurants.setHasFixedSize(true);
         lstRestaurants.setLayoutManager(manager);
 
-        /*Restaurant r1 = new Restaurant("Dal Fufo Galija", 41.991632, 21.4227177, 1.56);
-        Restaurant r2 = new Restaurant("Mexican Restaurant \"Amigos\"", 41.9929128, 21.428114, 1.56);
-        Restaurant r3 = new Restaurant("Bella Vista - Lounge bar & Restaurant", 41.9951693, 21.4319664, 1.56);
-        Restaurant r4 = new Restaurant("Pelister", 41.9951693, 21.4319664, 1.56);
-        Restaurant r5 = new Restaurant("Squeeze Me", 41.9970685, 21.4282868, 1.56);
-        Restaurant r6 = new Restaurant("Sushi Co", 41.9995376, 21.4235793, 1.56);
-        Restaurant r7 = new Restaurant("Idadija Restaurant", 42.0013537, 21.4203743, 1.56);
-        Restaurant r8 = new Restaurant("Skopski Merak", 42.0011807, 21.4204159, 1.56);
-        Restaurant r9 = new Restaurant("Chardak Restaurant - Center", 42.0017447, 21.4220024, 1.56);
-        Restaurant r10   = new Restaurant("Fitness House", 42.0008492, 21.4147021, 1.56);*/
-
-        new GetLikelyHoodAsync(this).execute(mGoogleApiClient);
+        if(dataSync){
+            new GetLikelyHoodAsync(this).execute(mGoogleApiClient);
+        }
 
         return v;
     }
@@ -166,6 +166,14 @@ public class RestaurantListFragment extends Fragment implements GoogleApiClient.
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Toast.makeText(getActivity(), "Connection cannot be established with Google Services", Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * Function that will read users settings
+     */
+    private void readSettings() {
+        sharedPreferencesCompat = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        dataSync = sharedPreferencesCompat.getBoolean(SettingsActivity.KEY_DATA_SYNC, false);
     }
 
 

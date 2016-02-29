@@ -1,5 +1,7 @@
 package com.martin.pizzarestaurantsapplication;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
@@ -11,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.martin.pizzarestaurantsapplication.adapters.CustomFragmentAdapter;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RestaurantListFragment.OnFragmentInteractionListener,
         RestaurantMapFragment.OnFragmentMapInteractionListener, View.OnClickListener {
@@ -54,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements RestaurantListFra
         RestaurantMapFragment mapFragment = new RestaurantMapFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.container, mapFragment, RestaurantMapFragment.TAG).commit();
         imgMap.setImageResource(R.drawable.ic_place_orange_24dp);
-
 
     }
 
